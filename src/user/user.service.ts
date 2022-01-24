@@ -1,3 +1,4 @@
+import { UpdateUserDto } from './dto/updateUser.dto';
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
@@ -76,6 +77,16 @@ export class UserService {
       );
     }
     return user;
+  }
+
+  async updateUser(
+    userId: number,
+    updateUserDto: UpdateUserDto,
+  ): Promise<UserEntity> {
+    const user = await this.findById(userId);
+    Object.assign(user, updateUserDto);
+    const newUser = await this.userRepository.save(user);
+    return newUser;
   }
 
   generateJwt(user: UserEntity): string {
