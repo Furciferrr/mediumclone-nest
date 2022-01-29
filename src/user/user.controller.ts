@@ -53,7 +53,6 @@ export class UserController {
   @UsePipes(
     new ValidationPipe({
       whitelist: true,
-      transform: true,
       forbidNonWhitelisted: true,
     }),
   )
