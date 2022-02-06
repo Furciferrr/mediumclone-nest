@@ -1,4 +1,5 @@
 import { User } from '@app/decorators/user.decorator';
+import { BackendValidationPipe } from '@app/shared/pipes/backendValidation.pipe';
 import {
   Body,
   Controller,
@@ -22,7 +23,7 @@ export class UserController {
   constructor(private readonly userService: UserService) {}
 
   @Post('users')
-  @UsePipes(new ValidationPipe())
+  @UsePipes(new BackendValidationPipe())
   async createUser(
     @Body('user') createUserDto: CreateUserDto,
   ): Promise<IUserResponse> {
@@ -31,7 +32,7 @@ export class UserController {
   }
 
   @Post('users/login')
-  @UsePipes(new ValidationPipe())
+  @UsePipes(new BackendValidationPipe())
   async login(
     @Body('user') loginUserDto: LoginUserDto,
   ): Promise<Omit<IUserResponse, 'password'>> {
