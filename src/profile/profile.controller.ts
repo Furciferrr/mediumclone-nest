@@ -11,15 +11,19 @@ import {
 import { ProfileService } from './profile.service';
 import { IProfileResponse } from './types/profileResponse.type';
 
-@Controller('profile')
+@Controller('profiles')
 export class ProfileController {
   constructor(private readonly profileService: ProfileService) {}
 
   @Get(':username')
   async getProfile(
     @Param('username') username: string,
+    @User('id') currentUserId: number,
   ): Promise<IProfileResponse> {
-    const profile = await this.profileService.getProfileByUsername(username);
+    const profile = await this.profileService.getProfileByUsername(
+      username,
+      currentUserId,
+    );
     return this.profileService.buildProfileResponse(profile);
   }
 
@@ -28,8 +32,9 @@ export class ProfileController {
   async follow(
     @User('id') currentUserId: number,
     @Param('username') username: string,
-  ) {
-    return await this.profileService.follow(username, currentUserId);
+  ): Promise<IProfileResponse> {
+    const profile = await this.profileService.follow(username, currentUserId);
+    return this.profileService.buildProfileResponse(profile);
   }
 
   @Delete(':username/follow')
@@ -37,7 +42,8 @@ export class ProfileController {
   async unfollow(
     @User('id') currentUserId: number,
     @Param('username') username: string,
-  ) {
-    return await this.profileService.unfollow(username, currentUserId);
+  ): Promise<IProfileResponse> {
+    const profile = await this.profileService.unfollow(username, currentUserId);
+    return this.profileService.buildProfileResponse(profile);
   }
 }
